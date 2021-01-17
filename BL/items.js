@@ -18,9 +18,15 @@ module.exports = function Items(DL) {
         delete: (id) => {
             return DL.delItem(id)
         },
-        read: () => {
-            return DL.getItems()
-        }
+        read: (price,department) => {
+            return DL.getItems(price,department)
+        },
+        readAll: (price) => {
+            return DL.getItemss(price)
+        },
+        // readAll: () => {
+        //     return DL.getItems()
+        // }
     }
 
 
