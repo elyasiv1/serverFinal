@@ -2,19 +2,7 @@ const BL = require('./BL')
 const { query } = require('express')
 
 function Router(app) {
-    // app.get('/', (req, res) => {
-    //     res.send(`<h1>home/</h1>`)
-    // })
 
-
-    // app.get('/items', async (req, res) => {
-    //     try {
-    //         const result = await BL.items.readAll()
-    //         res.send(result)
-    //     } catch (error) {
-    //         res.send({ error: error.message || error })
-    //     }
-    // })
     app.get('/users', async (req, res) => {
         try {
             result = await BL.users.readAll()
@@ -62,15 +50,28 @@ function Router(app) {
             res.send({ error: error.message || error })
         }
     })
-    app.put('/user', async (req, res) => {
+
+    app.post('/user/order', async (req, res) => {// זה לעידכון הזמנה 
         try {
             const { body } = req
-            const result = await BL.users.update(body)
+            const result = await BL.users.updateOrder(body)
             res.send(result)
         } catch (error) {
             res.send({ error: error.message || error })
         }
+
     })
+
+    // app.put('/user', async (req, res) => {
+    //     try {
+    //         const { body } = req
+    //         const result = await BL.users.updateUser(body)
+    //         res.send(result)
+    //     } catch (error) {
+    //         res.send({ error: error.message || error })
+    //     }
+    // })
+
     app.delete('/user/:id', async (req, res) => {
         try {
             const { id } = req.params
@@ -79,17 +80,6 @@ function Router(app) {
         } catch (error) {
             res.send({ error: error.message || error })
         }
-    })
-
-    app.post('/user', async (req, res) => {
-        try {
-            const { body } = req
-            const result = await BL.users.update(body)
-            res.send(result)
-        } catch (error) {
-            res.send({ error: error.message || error })
-        }
-
     })
 
     app.get('/items', async (req, res) => {

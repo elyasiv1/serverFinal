@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
 
 mongoose.connect(
-  " mongodb+srv://shivi:shivi123@cluster0-ri5rq.mongodb.net/test?retryWrites=true&w=majority",
-     {
-    auto_reconnect: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-},
+    " mongodb+srv://shivi:shivi123@cluster0-ri5rq.mongodb.net/test?retryWrites=true&w=majority",// ניתן לצנזר ב.env
+    {
+        auto_reconnect: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false
+    },
     (err) => {
         if (err)
             throw 'mongo connection problem'
@@ -33,15 +33,17 @@ const userScheme = {
     id: String,
     name: String,
     email: String,
-    creditCard: String,
+    Address:String,
+    creditCard: {
+        type: String,
+        select: false
+    },
     password: {
         type: String,
         select: false
     },
-    orderHistory:{
-        type:String
-    }
-    
+    orderHistory: []
+
 }
 
 const userModel = mongoose.model('users', userScheme)
@@ -49,30 +51,33 @@ const userModel = mongoose.model('users', userScheme)
 const getUsers = async () => {
     return userModel.find({}, 'id name')
 }
-const getAllUsers=async()=>{
+const getAllUsers = async () => {
     return userModel.find({})
 }
 const getUser = async (id) => {
-    return userModel.findById(id)// מחזיר רק את האיי די ולא את כל הנתונים?
+    return userModel.findById(id)
 }
 
 const getUserByEmail = async (email) => {
     return userModel.findOne({ email })
 }
 
-const updateUser = async (newUser) => {// לא ברור לי מה עשינו פה
+const updateUser = async (newUser) => {
     return userModel.findOneAndUpdate({ id: newUser.id }, newUser, { runValidators: true, new: true })
 }
 const updateUserOrder = async (newOrder) => {
-    return itemModel.findOneAndUpdate({ id: user.id }, newOrder, { newOrder:newOrder })
+    return userModel.findOneAndUpdate({ email: newOrder.email }, { $push: { orderHistory: {newOrder} } },
+        //צריך לדחוף את ההזמנה החדשה לorderHistory
+        // כרגע לא עובד
+    )
 }
-updateUserOrder
+
 const createUser = async (data) => {
     return userModel.create(data)
 }
 
 const delUser = async (id) => {
-    return userModel.findOneAndDelete(id)
+    return userModel.findOneAndDelete({ id })
 }
 
 
@@ -101,9 +106,11 @@ const updateItem = async (newItem) => {
 const createItem = async (data) => {
     return itemModel.create(data)
 }
+
 const delItem = async (id) => {
     return itemModel.findOneAndDelete({ id })
 }
-
-module.exports = { getAllUsers,getItems, getItem, createItem, updateItem, delItem, getItemss,
-    getUsers, getUser, createUser, getUserByEmail, updateUser, delUser }
+module.exports = {
+    getAllUsers, getItems, getItem, createItem, updateItem, delItem, getItemss,
+    getUsers, getUser, createUser, getUserByEmail, updateUser, updateUserOrder, delUser
+}

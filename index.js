@@ -4,7 +4,7 @@ const
     express = require('express'),
     router = require('./router'),
     app = express(),
-    port =5555
+    port =5555// ניתן לצנזר ב.env
 
 
 

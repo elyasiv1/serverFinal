@@ -45,7 +45,7 @@ module.exports = function Users(DL) {
             // if (!data.creditCard) throw 'credit card is requird'
 
             data.password = bcrypt.hashSync(data.password, 8)// מזה ה8?
-            // data.creditCard = bcrypt.hashSync(data.creditCard, 16)// ניסיון פחות מוצלח להצפין את המספר אשראי
+
             data.id = uniqid()
 
             await DL.createUser(data)
@@ -62,23 +62,16 @@ module.exports = function Users(DL) {
                 throw 'password and email dont match'
             return { token: createToken(email) }
         },
-        update: (data) => {
+        updateOrder: (data) => {
             
             return DL.updateUserOrder(data)
         },
-        // update: (data) => {
-        //     return DL.updateUser(data)
-        // },
+        updateUser: (data) => {
+            return DL.updateUser(data)
+        },
 
-        delete: async (id) => {
-
+        delete: (id) => {
             return DL.delUser(id)
         }
     }
-
-    /*  function read() {
-         return DL.getUsers()
-     }
- 
-     return { read } */
 }
